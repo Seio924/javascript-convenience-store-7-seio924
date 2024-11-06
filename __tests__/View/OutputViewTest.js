@@ -1,4 +1,5 @@
 import Product from '../../src/Model/Product';
+import OutputView from '../../src/View/OutputView';
 import { expectLogContains, getLogSpy, getOutput } from '../ApplicationTest';
 
 describe('OutputView 테스트', () => {
