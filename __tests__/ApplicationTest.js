@@ -2,7 +2,7 @@ import App from '../src/App.js';
 import { MissionUtils } from '@woowacourse/mission-utils';
 import { EOL as LINE_SEPARATOR } from 'os';
 
-const mockQuestions = inputs => {
+export const mockQuestions = inputs => {
   const messages = [];
 
   MissionUtils.Console.readLineAsync = jest.fn(prompt => {
@@ -19,29 +19,29 @@ const mockQuestions = inputs => {
   MissionUtils.Console.readLineAsync.messages = messages;
 };
 
-const mockNowDate = (date = null) => {
+export const mockNowDate = (date = null) => {
   const mockDateTimes = jest.spyOn(MissionUtils.DateTimes, 'now');
   mockDateTimes.mockReturnValue(new Date(date));
   return mockDateTimes;
 };
 
-const getLogSpy = () => {
+export const getLogSpy = () => {
   const logSpy = jest.spyOn(MissionUtils.Console, 'print');
   logSpy.mockClear();
   return logSpy;
 };
 
-const getOutput = logSpy => {
+export const getOutput = logSpy => {
   return [...logSpy.mock.calls].join(LINE_SEPARATOR);
 };
 
-const expectLogContains = (received, expects) => {
+export const expectLogContains = (received, expects) => {
   expects.forEach(exp => {
     expect(received).toContain(exp);
   });
 };
 
-const expectLogContainsWithoutSpacesAndEquals = (received, expects) => {
+export const expectLogContainsWithoutSpacesAndEquals = (received, expects) => {
   const processedReceived = received.replace(/[\s=]/g, '');
   expects.forEach(exp => {
     expect(processedReceived).toContain(exp);
