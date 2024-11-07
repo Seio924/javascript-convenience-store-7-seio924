@@ -1,17 +1,31 @@
 import { getTodayDate } from '../utils.js';
+import Product from './Product.js';
 
 class Order {
-  #purchasedItems;
+  #orderList;
   #orderDate;
 
-  constructor(purchasedItems) {
-    this.#purchasedItems = purchasedItems;
+  constructor() {
+    this.#orderList = [];
     this.#orderDate = getTodayDate();
+  }
+
+  setOrderList(purchasedItems) {
+    purchasedItems.map(purchasedItem => {
+      this.#orderList.push(
+        new Product({
+          name: purchasedItem.name,
+          price: null,
+          quantity: purchasedItem.quantity,
+          promotion: null,
+        })
+      );
+    });
   }
 
   getOrder() {
     return Object.freeze({
-      purchasedItems: this.#purchasedItems,
+      orderList: this.#orderList,
       orderDate: this.#orderDate,
     });
   }
