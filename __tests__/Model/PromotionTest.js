@@ -1,3 +1,5 @@
+import Promotion from '../../src/Model/Promotion';
+
 describe('Promotion 테스트', () => {
   test('프로모션 조건을 설정한다.', async () => {
     const expectedPromotion = {

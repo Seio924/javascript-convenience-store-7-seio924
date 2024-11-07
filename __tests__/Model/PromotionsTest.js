@@ -1,3 +1,6 @@
+import Promotion from '../../src/Model/Promotion';
+import Promotions from '../../src/Model/Promotions';
+
 describe('Promotions 테스트', () => {
   test('프로모션 목록을 설정한다.', async () => {
     const expectedPromotions = [
