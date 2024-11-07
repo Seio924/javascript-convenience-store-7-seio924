@@ -9,22 +9,22 @@ export async function printOutput(string) {
   MissionUtils.Console.print(string);
 }
 
-export function parseProducts(filePath) {
+export function parseDataFromFile(filePath) {
   const data = fs.readFileSync(filePath, 'utf8');
   const lines = data.trim().split('\n');
   const header = lines[0].split(',');
-  const products = [];
+  const parsedData = [];
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',');
-    const product = {};
+    const item = {};
     for (let j = 0; j < header.length; j++) {
-      product[header[j].trim()] = values[j].trim();
+      item[header[j].trim()] = values[j].trim();
     }
-    products.push(product);
+    parsedData.push(item);
   }
 
-  return products;
+  return parsedData;
 }
 
 export function getTodayDate() {

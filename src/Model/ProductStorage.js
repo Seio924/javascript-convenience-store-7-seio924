@@ -1,4 +1,4 @@
-import { parseProducts } from '../utils.js';
+import { parseDataFromFile } from '../utils.js';
 import Product from './Product.js';
 import path from 'path';
 
@@ -11,7 +11,7 @@ class ProductStorage {
 
   fillProductStorage() {
     const filePath = path.join(process.cwd(), 'public/products.md');
-    const products = parseProducts(filePath);
+    const products = parseDataFromFile(filePath);
 
     products.map(product => {
       console.log(product);
