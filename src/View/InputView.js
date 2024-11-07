@@ -15,6 +15,18 @@ class InputView {
 
     return purchasedItems;
   }
+
+  async askForPromotionAddition(product, quantity) {
+    const wantsToAddPromotionItem = await readInput(
+      `현재 ${product}은(는) ${quantity}개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)`
+    );
+
+    if (wantsToAddPromotionItem === 'Y') {
+      return true;
+    } else if (wantsToAddPromotionItem === 'N') {
+      return false;
+    }
+  }
 }
 
 export default InputView;
