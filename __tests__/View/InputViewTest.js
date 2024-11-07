@@ -16,4 +16,24 @@ describe('InputView 테스트', () => {
 
     expect(purchasedItems).toEqual(expectedOutputs);
   });
+
+  test.each([
+    [['Y'], '사이다', 1, true],
+    [['N'], '콜라', 2, false],
+    [['Y'], '오렌지주스', 3, true],
+    [['N'], '탄산수', 1, false],
+  ])(
+    '프로모션 상품에 대한 추가 여부를 입력받는다.',
+    async (purchaseInput, product, quantity, expectedOutput) => {
+      mockQuestions(purchaseInput);
+
+      const inputView = new InputView();
+      const isAddingPromotionItem = await inputView.askForPromotionAddition(
+        product,
+        quantity
+      );
+
+      expect(isAddingPromotionItem).toEqual(expectedOutput);
+    }
+  );
 });
