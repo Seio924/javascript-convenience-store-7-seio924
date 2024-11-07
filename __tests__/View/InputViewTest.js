@@ -2,20 +2,33 @@ import InputView from '../../src/View/InputView';
 import { mockQuestions } from '../ApplicationTest';
 
 describe('InputView 테스트', () => {
-  test('구매할 상품과 수량을 입력 받는다.', async () => {
-    const purchaseInput = ['[콜라-3],[에너지바-5]'];
-    const expectedOutputs = [
-      { name: '콜라', quantity: 3 },
-      { name: '에너지바', quantity: 5 },
-    ];
+  test.each([
+    [
+      ['[콜라-3],[에너지바-5]'],
+      [
+        { name: '콜라', quantity: 3 },
+        { name: '에너지바', quantity: 5 },
+      ],
+    ],
+    [['[초코바-4]'], [{ name: '초코바', quantity: 4 }]],
+    [
+      ['[물-10],[비타민워터-6]'],
+      [
+        { name: '물', quantity: 10 },
+        { name: '비타민워터', quantity: 6 },
+      ],
+    ],
+  ])(
+    '구매할 상품과 수량을 입력 받는다.',
+    async (purchaseInput, expectedOutput) => {
+      mockQuestions(purchaseInput);
 
-    mockQuestions(purchaseInput);
+      const inputView = new InputView();
+      const purchasedItems = await inputView.readPurchaseInput();
 
-    const inputView = new InputView();
-    const purchasedItems = await inputView.readPurchaseInput();
-
-    expect(purchasedItems).toEqual(expectedOutputs);
-  });
+      expect(purchasedItems).toEqual(expectedOutput);
+    }
+  );
 
   test.each([
     [['Y'], '사이다', 1, true],
