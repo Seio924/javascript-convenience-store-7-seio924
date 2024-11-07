@@ -1,3 +1,4 @@
+import Order from '../../src/Model/Order';
 import { mockNowDate } from '../ApplicationTest';
 
 describe('Order 테스트', () => {

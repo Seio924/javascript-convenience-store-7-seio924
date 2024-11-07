@@ -26,3 +26,9 @@ export function parseProducts(filePath) {
 
   return products;
 }
+
+export function getTodayDate() {
+  const dateTimes = MissionUtils.DateTimes.now();
+  const todayDate = dateTimes.toLocaleDateString('en-CA');
+  return todayDate;
+}
