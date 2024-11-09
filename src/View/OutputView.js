@@ -1,4 +1,4 @@
-import { printOutput } from '../utils';
+import { printOutput } from '../utils.js';
 
 class OutputView {
   printConvenienceStoreDetails() {

@@ -5,7 +5,7 @@ describe('Product 테스트', () => {
     const expectedProduct = {
       name: '콜라',
       price: 1000,
-      quantity: '10',
+      quantity: 10,
       promotion: '탄산2+1',
     };
 

@@ -7,7 +7,7 @@ class Product {
   constructor({ name, price, quantity, promotion }) {
     this.#name = name;
     this.#price = Number(price);
-    this.#quantity = quantity;
+    this.#quantity = Number(quantity);
     this.#promotion = promotion;
 
     if (promotion === 'null') {
