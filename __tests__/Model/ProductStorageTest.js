@@ -1,3 +1,4 @@
+import Order from '../../src/Model/Order';
 import Product from '../../src/Model/Product';
 import ProductStorage from '../../src/Model/ProductStorage';
 
@@ -113,4 +114,27 @@ describe('ProductStorage 테스트', () => {
       expect(products[index].promotion).toBe(expectedProduct.promotion);
     });
   });
+
+  test.each([
+    [{ name: '콜라', quantity: 5 }, true],
+    [{ name: '사이다', quantity: 10 }, true],
+    [{ name: '콜라', quantity: 15 }, true],
+    [{ name: '에너지바', quantity: 6 }, false],
+  ])(
+    '구매 수량과 각 상품의 재고 수량을 고려하여 재료 부족 여부를 확인한다.',
+    async (purchasedItem, expectedOutput) => {
+      const order = new Order();
+      const productStorage = new ProductStorage();
+
+      productStorage.fillProductStorage();
+      order.setOrderList([purchasedItem]);
+
+      const orderList = order.getOrder().orderList;
+      const orderProduct = orderList[0];
+
+      const result = productStorage.checkStockAvailability(orderProduct);
+
+      expect(result).toBe(expectedOutput);
+    }
+  );
 });
