@@ -23,6 +23,18 @@ class Order {
     });
   }
 
+  addPromotionToOrder(productStorage) {
+    this.#orderList.forEach(orderProduct => {
+      const promotion = productStorage.getProductPromotion(
+        orderProduct.getProduct().name
+      );
+
+      if (promotion) {
+        orderProduct.setPromotion(promotion);
+      }
+    });
+  }
+
   getOrder() {
     return Object.freeze({
       orderList: this.#orderList,

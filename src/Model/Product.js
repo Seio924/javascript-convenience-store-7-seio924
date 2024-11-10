@@ -15,6 +15,10 @@ class Product {
     }
   }
 
+  setPromotion(promotion) {
+    this.#promotion = promotion;
+  }
+
   getProduct() {
     return Object.freeze({
       name: this.#name,

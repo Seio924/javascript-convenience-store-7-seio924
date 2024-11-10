@@ -47,6 +47,21 @@ class ProductStorage {
 
     return true;
   }
+
+  getProductPromotion(productName) {
+    let promotion = null;
+
+    this.#productStorage.forEach(product => {
+      if (
+        product.getProduct().name === productName &&
+        product.getProduct().promotion !== null
+      ) {
+        promotion = product.getProduct().promotion;
+      }
+    });
+
+    return promotion;
+  }
 }
 
 export default ProductStorage;
