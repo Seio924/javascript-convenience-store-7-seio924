@@ -26,13 +26,13 @@ class Promotion {
   calculateFreeGift(quantity) {
     const promotionTotal = this.#buy + this.#get;
 
-    const fullSets = Math.floor(quantity / promotionTotal);
+    const fullSets = Math.floor(quantity / promotionTotal) * this.#get;
     const remainder = quantity % promotionTotal;
 
-    let isAdditionalPurchasePossible = false;
+    let isAdditionalPurchasePossible = null;
 
     if (remainder === this.#buy) {
-      isAdditionalPurchasePossible = true;
+      isAdditionalPurchasePossible = this.#get;
     }
 
     return {

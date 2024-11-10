@@ -1,5 +1,4 @@
 import { parseDataFromFile } from '../utils.js';
-import Product from './Product.js';
 import Promotion from './Promotion.js';
 import path from 'path';
 
@@ -84,7 +83,20 @@ class Promotions {
 
       return {
         isStockShortage: true,
-        isAdditionalPurchasePossible: false,
+        isAdditionalPurchasePossible: null,
+        fullSets,
+        remainder,
+      };
+    }
+
+    if (purchaseQuantity === promotionProductQuantity) {
+      let { fullSets, remainder } = promotion.calculateFreeGift(
+        promotionProductQuantity
+      );
+
+      return {
+        isStockShortage: false,
+        isAdditionalPurchasePossible: null,
         fullSets,
         remainder,
       };

@@ -38,7 +38,7 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { isAdditionalPurchasePossible: false, fullSets: 3, remainder: 1 },
+      { isAdditionalPurchasePossible: null, fullSets: 3, remainder: 1 },
     ],
     [
       7,
@@ -49,7 +49,7 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { isAdditionalPurchasePossible: false, fullSets: 2, remainder: 1 },
+      { isAdditionalPurchasePossible: null, fullSets: 2, remainder: 1 },
     ],
     [
       9,
@@ -60,7 +60,7 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { isAdditionalPurchasePossible: true, fullSets: 4, remainder: 1 },
+      { isAdditionalPurchasePossible: 1, fullSets: 4, remainder: 1 },
     ],
   ])(
     '프로모션 조건에 따라 각 상품의 추가 구매 가능 여부와 무료 증정 수량을 계산한다.',
