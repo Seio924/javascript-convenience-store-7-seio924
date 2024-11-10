@@ -30,7 +30,7 @@ describe('Promotion 테스트', () => {
 
   test.each([
     [
-      { name: '콜라', price: 1000, quantity: 10, promotion: '탄산2+1' },
+      10,
       {
         name: '탄산2+1',
         buy: 2,
@@ -38,10 +38,10 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { name: '콜라', isAdditionalPurchasePossible: false, fullSets: 3 },
+      { isAdditionalPurchasePossible: false, fullSets: 3, remainder: 1 },
     ],
     [
-      { name: '사이다', price: 1000, quantity: 7, promotion: '탄산2+1' },
+      7,
       {
         name: '탄산2+1',
         buy: 2,
@@ -49,10 +49,10 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { name: '사이다', isAdditionalPurchasePossible: false, fullSets: 2 },
+      { isAdditionalPurchasePossible: false, fullSets: 2, remainder: 1 },
     ],
     [
-      { name: '오렌지주스', price: 1800, quantity: 9, promotion: 'MD추천상품' },
+      9,
       {
         name: 'MD추천상품',
         buy: 1,
@@ -60,16 +60,14 @@ describe('Promotion 테스트', () => {
         start_date: '2024-01-01',
         end_date: '2024-12-31',
       },
-      { name: '오렌지주스', isAdditionalPurchasePossible: true, fullSets: 4 },
+      { isAdditionalPurchasePossible: true, fullSets: 4, remainder: 1 },
     ],
   ])(
     '프로모션 조건에 따라 각 상품의 추가 구매 가능 여부와 무료 증정 수량을 계산한다.',
-    (orderItem, promotionData, expectedOutput) => {
-      const orderProduct = new Product(orderItem);
-
+    (quantity, promotionData, expectedOutput) => {
       const promotion = new Promotion(promotionData);
 
-      expect(promotion.calculateFreeGift(orderProduct)).toEqual(expectedOutput);
+      expect(promotion.calculateFreeGift(quantity)).toEqual(expectedOutput);
     }
   );
 });

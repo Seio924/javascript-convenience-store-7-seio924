@@ -48,27 +48,23 @@ describe('Promotions 테스트', () => {
   test.each([
     [
       [
-        { name: '콜라', price: 1000, quantity: 10, promotion: '탄산2+1' },
+        { name: '콜라', price: 1000, quantity: 11, promotion: '탄산2+1' },
         { name: '사이다', price: 1000, quantity: 7, promotion: '탄산2+1' },
       ],
       [
         {
+          name: '콜라',
+          isStockShortage: true,
           isAdditionalPurchasePossible: false,
-          freeProduct: new Product({
-            name: '콜라',
-            price: null,
-            quantity: 3,
-            promotion: null,
-          }),
+          fullSets: 3,
+          remainder: 2,
         },
         {
+          name: '사이다',
+          isStockShortage: false,
           isAdditionalPurchasePossible: false,
-          freeProduct: new Product({
-            name: '사이다',
-            price: null,
-            quantity: 2,
-            promotion: null,
-          }),
+          fullSets: 2,
+          remainder: 1,
         },
       ],
     ],
@@ -84,18 +80,16 @@ describe('Promotions 테스트', () => {
       ],
       [
         {
+          name: '오렌지주스',
+          isStockShortage: false,
           isAdditionalPurchasePossible: true,
-          freeProduct: new Product({
-            name: '오렌지주스',
-            price: null,
-            quantity: 4,
-            promotion: null,
-          }),
+          fullSets: 4,
+          remainder: 1,
         },
       ],
     ],
   ])(
-    '프로모션 조건에 따라 모든 상품의 추가 구매 가능 여부와 무료 증정 수량을 계산한다.',
+    '프로모션 조건에 따라 모든 상품의 추가 구매 가능 여부, 프로모션 재고 부족 여부, 무료 증정 수량을 계산한다.',
     (purchasedItem, expectedOutput) => {
       const productStorage = new ProductStorage();
       productStorage.fillProductStorage();
@@ -107,7 +101,9 @@ describe('Promotions 테스트', () => {
       const promotions = new Promotions();
       promotions.setPromotions();
 
-      expect(promotions.checkPromotionInOrder(order)).toEqual(expectedOutput);
+      expect(promotions.checkPromotionInOrder(productStorage, order)).toEqual(
+        expectedOutput
+      );
     }
   );
 });
