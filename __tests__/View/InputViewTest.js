@@ -49,4 +49,24 @@ describe('InputView 테스트', () => {
       expect(isAddingPromotionItem).toEqual(expectedOutput);
     }
   );
+
+  test.each([
+    [['Y'], true],
+    [['N'], false],
+    [['Y'], true],
+    [['N'], false],
+  ])(
+    '일부 수량에 대해 정가로 결제할지 여부를 입력받는다.',
+    async (purchaseInput, expectedOutput) => {
+      mockQuestions(purchaseInput);
+
+      const inputView = new InputView();
+      const wantsFullPricePayment = await inputView.askForFullPricePayment(
+        'test',
+        4
+      );
+
+      expect(wantsFullPricePayment).toEqual(expectedOutput);
+    }
+  );
 });
