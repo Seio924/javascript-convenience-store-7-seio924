@@ -137,4 +137,21 @@ describe('ProductStorage 테스트', () => {
       expect(result).toBe(expectedOutput);
     }
   );
+
+  test.each([
+    ['콜라', '탄산2+1'],
+    ['감자칩', '반짝할인'],
+    ['오렌지주스', 'MD추천상품'],
+    ['비타민워터', null],
+  ])(
+    '상품 이름을 통해 적용된 프로모션 유무를 확인한다.',
+    (productName, expectedOutput) => {
+      const productStorage = new ProductStorage();
+
+      productStorage.fillProductStorage();
+      const promotion = productStorage.getProductPromotion(productName);
+
+      expect(promotion).toBe(expectedOutput);
+    }
+  );
 });
