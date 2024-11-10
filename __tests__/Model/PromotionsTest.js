@@ -1,3 +1,6 @@
+import Order from '../../src/Model/Order';
+import Product from '../../src/Model/Product';
+import ProductStorage from '../../src/Model/ProductStorage';
 import Promotion from '../../src/Model/Promotion';
 import Promotions from '../../src/Model/Promotions';
 
@@ -41,4 +44,70 @@ describe('Promotions 테스트', () => {
       expect(promotionList[index].end_date).toBe(expectedPromotion.end_date);
     });
   });
+
+  test.each([
+    [
+      [
+        { name: '콜라', price: 1000, quantity: 10, promotion: '탄산2+1' },
+        { name: '사이다', price: 1000, quantity: 7, promotion: '탄산2+1' },
+      ],
+      [
+        {
+          isAdditionalPurchasePossible: false,
+          freeProduct: new Product({
+            name: '콜라',
+            price: null,
+            quantity: 3,
+            promotion: null,
+          }),
+        },
+        {
+          isAdditionalPurchasePossible: false,
+          freeProduct: new Product({
+            name: '사이다',
+            price: null,
+            quantity: 2,
+            promotion: null,
+          }),
+        },
+      ],
+    ],
+    [
+      [
+        {
+          name: '오렌지주스',
+          price: 1800,
+          quantity: 9,
+          promotion: 'MD추천상품',
+        },
+        { name: '물', price: 500, quantity: 10, promotion: null },
+      ],
+      [
+        {
+          isAdditionalPurchasePossible: true,
+          freeProduct: new Product({
+            name: '오렌지주스',
+            price: null,
+            quantity: 4,
+            promotion: null,
+          }),
+        },
+      ],
+    ],
+  ])(
+    '프로모션 조건에 따라 모든 상품의 추가 구매 가능 여부와 무료 증정 수량을 계산한다.',
+    (purchasedItem, expectedOutput) => {
+      const productStorage = new ProductStorage();
+      productStorage.fillProductStorage();
+
+      const order = new Order();
+      order.setOrderList(purchasedItem);
+      order.addPromotionToOrder(productStorage);
+
+      const promotions = new Promotions();
+      promotions.setPromotions();
+
+      expect(promotions.checkPromotionInOrder(order)).toEqual(expectedOutput);
+    }
+  );
 });
