@@ -1,4 +1,5 @@
 import { parseDataFromFile } from '../utils.js';
+import Product from './Product.js';
 import Promotion from './Promotion.js';
 import path from 'path';
 
@@ -24,6 +25,32 @@ class Promotions {
         })
       );
     });
+  }
+
+  checkPromotionInOrder(order) {
+    const freeGifts = [];
+
+    order.getOrder().orderList.forEach(orderProduct => {
+      const productPromotion = orderProduct.getProduct().promotion;
+
+      this.#promotions.forEach(promotion => {
+        if (productPromotion === promotion.getPromotion().name) {
+          const freeGift = promotion.calculateFreeGift(orderProduct);
+
+          freeGifts.push({
+            isAdditionalPurchasePossible: freeGift.isAdditionalPurchasePossible,
+            freeProduct: new Product({
+              name: freeGift.name,
+              price: null,
+              quantity: freeGift.quantity,
+              promotion: null,
+            }),
+          });
+        }
+      });
+    });
+
+    return freeGifts;
   }
 
   getPromotions() {

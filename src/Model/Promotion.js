@@ -22,6 +22,28 @@ class Promotion {
       end_date: this.#end_date,
     });
   }
+
+  calculateFreeGift(orderProduct) {
+    const purchaseQuantity = orderProduct.getProduct().quantity;
+    const promotionTotal = this.#buy + this.#get;
+
+    const fullSets = Math.floor(purchaseQuantity / promotionTotal);
+    const remainder = purchaseQuantity % promotionTotal;
+
+    if (remainder === this.#buy) {
+      return {
+        name: orderProduct.getProduct().name,
+        isAdditionalPurchasePossible: true,
+        fullSets,
+      };
+    }
+
+    return {
+      name: orderProduct.getProduct().name,
+      isAdditionalPurchasePossible: false,
+      fullSets,
+    };
+  }
 }
 
 export default Promotion;
