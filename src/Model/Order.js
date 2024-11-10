@@ -35,6 +35,22 @@ class Order {
     });
   }
 
+  decreaseProductQuantity(productName, quantityToSubtract) {
+    const orderProduct = this.#orderList.find(
+      product => product.getProduct().name === productName
+    );
+
+    orderProduct.decreaseQuantity(quantityToSubtract);
+  }
+
+  increaseProductQuantity(productName, quantityToAdd) {
+    const orderProduct = this.#orderList.find(
+      product => product.getProduct().name === productName
+    );
+
+    orderProduct.increaseQuantity(quantityToAdd);
+  }
+
   getOrder() {
     return Object.freeze({
       orderList: this.#orderList,

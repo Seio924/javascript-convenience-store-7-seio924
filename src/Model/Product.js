@@ -19,6 +19,14 @@ class Product {
     this.#promotion = promotion;
   }
 
+  decreaseQuantity(amount) {
+    this.#quantity -= amount;
+  }
+
+  increaseQuantity(amount) {
+    this.#quantity += amount;
+  }
+
   getProduct() {
     return Object.freeze({
       name: this.#name,
