@@ -97,13 +97,13 @@ const run = async ({
 
 const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N'];
 
-describe.skip('편의점', () => {
+describe('편의점', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.restoreAllMocks();
   });
 
-  test('파일에 있는 상품 목록 출력', async () => {
+  test.skip('파일에 있는 상품 목록 출력', async () => {
     await run({
       inputs: ['[콜라-1]', 'N', 'N'],
       /* prettier-ignore */
@@ -130,14 +130,14 @@ describe.skip('편의점', () => {
     });
   });
 
-  test('여러 개의 일반 상품 구매', async () => {
+  test.skip('여러 개의 일반 상품 구매', async () => {
     await run({
       inputs: ['[비타민워터-3],[물-2],[정식도시락-2]', 'N', 'N'],
       expectedIgnoringWhiteSpaces: ['내실돈18,300'],
     });
   });
 
-  test('기간에 해당하지 않는 프로모션 적용', async () => {
+  test.skip('기간에 해당하지 않는 프로모션 적용', async () => {
     mockNowDate('2024-02-01');
 
     await run({
