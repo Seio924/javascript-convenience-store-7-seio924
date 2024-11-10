@@ -27,30 +27,78 @@ class Promotions {
     });
   }
 
-  checkPromotionInOrder(order) {
+  checkPromotionInOrder(productStorage, order) {
     const freeGifts = [];
 
     order.getOrder().orderList.forEach(orderProduct => {
+      const productName = orderProduct.getProduct().name;
       const productPromotion = orderProduct.getProduct().promotion;
+      const purchaseQuantity = orderProduct.getProduct().quantity;
 
-      this.#promotions.forEach(promotion => {
-        if (productPromotion === promotion.getPromotion().name) {
-          const freeGift = promotion.calculateFreeGift(orderProduct);
+      if (productPromotion) {
+        const promotion = this.#promotions.find(
+          promo => promo.getPromotion().name === productPromotion
+        );
 
-          freeGifts.push({
-            isAdditionalPurchasePossible: freeGift.isAdditionalPurchasePossible,
-            freeProduct: new Product({
-              name: freeGift.name,
-              price: null,
-              quantity: freeGift.quantity,
-              promotion: null,
-            }),
-          });
-        }
-      });
+        const promotionProductQuantity =
+          productStorage.getProductQuantityByPromotion(
+            productName,
+            productPromotion
+          );
+
+        const {
+          isStockShortage,
+          isAdditionalPurchasePossible,
+          fullSets,
+          remainder,
+        } = this.calculateFreeGiftBasedOnStock(
+          purchaseQuantity,
+          promotionProductQuantity,
+          promotion
+        );
+
+        freeGifts.push({
+          name: productName,
+          isStockShortage,
+          isAdditionalPurchasePossible,
+          fullSets,
+          remainder,
+        });
+      }
     });
 
     return freeGifts;
+  }
+
+  calculateFreeGiftBasedOnStock(
+    purchaseQuantity,
+    promotionProductQuantity,
+    promotion
+  ) {
+    if (purchaseQuantity > promotionProductQuantity) {
+      let { fullSets, remainder } = promotion.calculateFreeGift(
+        promotionProductQuantity
+      );
+
+      remainder += purchaseQuantity - promotionProductQuantity;
+
+      return {
+        isStockShortage: true,
+        isAdditionalPurchasePossible: false,
+        fullSets,
+        remainder,
+      };
+    }
+
+    const { isAdditionalPurchasePossible, fullSets, remainder } =
+      promotion.calculateFreeGift(purchaseQuantity);
+
+    return {
+      isStockShortage: false,
+      isAdditionalPurchasePossible,
+      fullSets,
+      remainder,
+    };
   }
 
   getPromotions() {

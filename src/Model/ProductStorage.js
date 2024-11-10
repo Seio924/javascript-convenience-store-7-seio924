@@ -14,7 +14,6 @@ class ProductStorage {
     const products = parseDataFromFile(filePath);
 
     products.map(product => {
-      console.log(product);
       this.#productStorage.push(new Product(product));
     });
   }
@@ -61,6 +60,17 @@ class ProductStorage {
     });
 
     return promotion;
+  }
+
+  getProductQuantityByPromotion(productName, productPromotion) {
+    for (let product of this.#productStorage) {
+      if (
+        product.getProduct().name === productName &&
+        product.getProduct().promotion === productPromotion
+      ) {
+        return product.getProduct().quantity;
+      }
+    }
   }
 }
 

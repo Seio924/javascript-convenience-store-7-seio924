@@ -23,25 +23,22 @@ class Promotion {
     });
   }
 
-  calculateFreeGift(orderProduct) {
-    const purchaseQuantity = orderProduct.getProduct().quantity;
+  calculateFreeGift(quantity) {
     const promotionTotal = this.#buy + this.#get;
 
-    const fullSets = Math.floor(purchaseQuantity / promotionTotal);
-    const remainder = purchaseQuantity % promotionTotal;
+    const fullSets = Math.floor(quantity / promotionTotal);
+    const remainder = quantity % promotionTotal;
+
+    let isAdditionalPurchasePossible = false;
 
     if (remainder === this.#buy) {
-      return {
-        name: orderProduct.getProduct().name,
-        isAdditionalPurchasePossible: true,
-        fullSets,
-      };
+      isAdditionalPurchasePossible = true;
     }
 
     return {
-      name: orderProduct.getProduct().name,
-      isAdditionalPurchasePossible: false,
+      isAdditionalPurchasePossible,
       fullSets,
+      remainder,
     };
   }
 }

@@ -25,6 +25,9 @@ class App {
       productStorage,
       inputView.readPurchaseInput
     );
+    order.addPromotionToOrder(productStorage);
+
+    console.log(promotions.checkPromotionInOrder(productStorage, order));
   }
 
   async validateOrderStock(productStorage, readPurchaseInput) {
