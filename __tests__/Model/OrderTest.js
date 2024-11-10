@@ -83,4 +83,80 @@ describe('Order 테스트', () => {
       expect(order.getOrder().orderList).toEqual(expectedOrderList);
     }
   );
+
+  test.each([
+    [
+      [{ name: '콜라', quantity: 2 }],
+      '콜라',
+      1,
+      [
+        new Product({
+          name: '콜라',
+          price: null,
+          quantity: 1,
+          promotion: null,
+        }),
+      ],
+    ],
+    [
+      [{ name: '오렌지주스', quantity: 3 }],
+      '오렌지주스',
+      2,
+      [
+        new Product({
+          name: '오렌지주스',
+          price: null,
+          quantity: 1,
+          promotion: null,
+        }),
+      ],
+    ],
+  ])(
+    '주문한 상품의 수량을 차감한다.',
+    (purchasedItem, productName, quantityToSubtract, expectedOrderList) => {
+      const order = new Order();
+      order.setOrderList(purchasedItem);
+      order.decreaseProductQuantity(productName, quantityToSubtract);
+
+      expect(order.getOrder().orderList).toEqual(expectedOrderList);
+    }
+  );
+
+  test.each([
+    [
+      [{ name: '콜라', quantity: 2 }],
+      '콜라',
+      1,
+      [
+        new Product({
+          name: '콜라',
+          price: null,
+          quantity: 3,
+          promotion: null,
+        }),
+      ],
+    ],
+    [
+      [{ name: '오렌지주스', quantity: 3 }],
+      '오렌지주스',
+      2,
+      [
+        new Product({
+          name: '오렌지주스',
+          price: null,
+          quantity: 5,
+          promotion: null,
+        }),
+      ],
+    ],
+  ])(
+    '주문한 상품의 수량을 더한다.',
+    (purchasedItem, productName, quantityToSubtract, expectedOrderList) => {
+      const order = new Order();
+      order.setOrderList(purchasedItem);
+      order.increaseProductQuantity(productName, quantityToSubtract);
+
+      expect(order.getOrder().orderList).toEqual(expectedOrderList);
+    }
+  );
 });
