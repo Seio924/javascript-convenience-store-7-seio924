@@ -27,7 +27,37 @@ class App {
     );
     order.addPromotionToOrder(productStorage);
 
-    console.log(promotions.checkPromotionInOrder(productStorage, order));
+    const promotionResultsForOrder = promotions.checkPromotionInOrder(
+      productStorage,
+      order
+    );
+
+    for (const result of promotionResultsForOrder) {
+      if (result.isStockShortage) {
+        const userWantsToProceed = await inputView.askForFullPricePayment(
+          result.name,
+          result.remainder
+        );
+        if (!userWantsToProceed) {
+          order.decreaseProductQuantity(result.name, result.remainder);
+          result.remainder = 0;
+        }
+      }
+
+      if (result.isAdditionalPurchasePossible) {
+        const userWantsToAddPromotion = await inputView.askForPromotionAddition(
+          result.name,
+          result.isAdditionalPurchasePossible
+        );
+        if (userWantsToAddPromotion) {
+          order.increaseProductQuantity(
+            result.name,
+            result.isAdditionalPurchasePossible
+          );
+          result.fullSets += result.isAdditionalPurchasePossible;
+        }
+      }
+    }
   }
 
   async validateOrderStock(productStorage, readPurchaseInput) {
