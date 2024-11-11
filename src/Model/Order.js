@@ -37,7 +37,9 @@ class Order {
 
   addPrice(productStorage) {
     this.#orderList.forEach(orderProduct => {
-      orderProduct.setPrice(productStorage.getProductPrice(orderProduct));
+      orderProduct.setPrice(
+        productStorage.getProductPrice(orderProduct.getProduct().name)
+      );
     });
   }
 
@@ -55,6 +57,20 @@ class Order {
     );
 
     orderProduct.increaseQuantity(quantityToAdd);
+  }
+
+  calculateTotalAmount() {
+    return this.#orderList.reduce((total, orderProduct) => {
+      const productInfo = orderProduct.getProduct();
+      return total + productInfo.price * productInfo.quantity;
+    }, 0);
+  }
+
+  calculateTotalQuantity() {
+    return this.#orderList.reduce((total, orderProduct) => {
+      const productInfo = orderProduct.getProduct();
+      return total + productInfo.quantity;
+    }, 0);
   }
 
   getOrder() {
