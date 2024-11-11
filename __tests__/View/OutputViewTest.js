@@ -77,4 +77,35 @@ describe('OutputView 테스트', () => {
 
     expectLogContains(output, expectedOutputs);
   });
+
+  test('증정 상품 내역을 출력한다.', () => {
+    const logSpy = getLogSpy();
+    const expectedOutputs = [
+      '===========증정=============',
+      '상품명\t\t수량',
+      '콜라\t\t3',
+      '사이다\t\t2',
+    ];
+    const freeGiftProducts = [
+      new Product({
+        name: '콜라',
+        price: 1000,
+        quantity: 3,
+        promotion: null,
+      }),
+      new Product({
+        name: '사이다',
+        price: 1000,
+        quantity: 2,
+        promotion: null,
+      }),
+    ];
+
+    const outputView = new OutputView();
+    outputView.printFreeGifts(freeGiftProducts);
+
+    const output = getOutput(logSpy);
+
+    expectLogContains(output, expectedOutputs);
+  });
 });
