@@ -60,6 +60,17 @@ class App {
         }
       }
     }
+
+    let discountAmount = 0;
+    if (inputView.askForMembershipDiscount()) {
+      const nonPromotedProducts = this.getNonPromotedProducts(
+        order,
+        promotionResultsForOrder
+      );
+
+      discountAmount =
+        membership.applyDiscountToNonPromotedProducts(nonPromotedProducts);
+    }
   }
 
   async validateOrderStock(productStorage, readPurchaseInput) {
@@ -75,6 +86,22 @@ class App {
       printOutput(error.message);
       return this.validateOrderStock(productStorage, readPurchaseInput);
     }
+  }
+
+  getNonPromotedProducts(order, promotionResultsForOrder) {
+    const nonPromotedProducts = order
+      .getOrder()
+      .orderList.filter(orderProduct => {
+        const productName = orderProduct.getProduct().name;
+
+        const isPromoted = promotionResultsForOrder.some(
+          result => result.name === productName
+        );
+
+        return !isPromoted;
+      });
+
+    return nonPromotedProducts;
   }
 }
 
