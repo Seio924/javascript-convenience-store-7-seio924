@@ -1,6 +1,7 @@
 import Order from '../../src/Model/Order';
 import Product from '../../src/Model/Product';
 import ProductStorage from '../../src/Model/ProductStorage';
+import Promotions from '../../src/Model/Promotions';
 import { mockNowDate } from '../ApplicationTest';
 
 describe('Order 테스트', () => {
@@ -35,6 +36,50 @@ describe('Order 테스트', () => {
 
     expect(order.getOrder()).toEqual(expectedOutputs);
   });
+
+  test.each([
+    [
+      '2023-11-07T00:00:00Z',
+      [{ name: '콜라', quantity: 2 }],
+      [
+        new Product({
+          name: '콜라',
+          price: null,
+          quantity: 2,
+          promotion: null,
+        }),
+      ],
+    ],
+    [
+      '2024-11-07T00:00:00Z',
+      [{ name: '콜라', quantity: 2 }],
+      [
+        new Product({
+          name: '콜라',
+          price: null,
+          quantity: 2,
+          promotion: '탄산2+1',
+        }),
+      ],
+    ],
+  ])(
+    '프로모션 기간에 맞는 주문 상품들에만 프로모션을 추가한다.',
+    (testDate, purchasedItem, expectedOrderList) => {
+      mockNowDate(testDate);
+
+      const productStorage = new ProductStorage();
+      productStorage.fillProductStorage();
+
+      const promotions = new Promotions();
+      promotions.setPromotions();
+
+      const order = new Order();
+      order.setOrderList(purchasedItem);
+      order.addPromotionToOrder(productStorage, promotions.getPromotions());
+
+      expect(order.getOrder().orderList).toEqual(expectedOrderList);
+    }
+  );
 
   test.each([
     [
@@ -76,9 +121,12 @@ describe('Order 테스트', () => {
       const productStorage = new ProductStorage();
       productStorage.fillProductStorage();
 
+      const promotions = new Promotions();
+      promotions.setPromotions();
+
       const order = new Order();
       order.setOrderList(purchasedItem);
-      order.addPromotionToOrder(productStorage);
+      order.addPromotionToOrder(productStorage, promotions.getPromotions());
 
       expect(order.getOrder().orderList).toEqual(expectedOrderList);
     }
