@@ -33,7 +33,8 @@ class ConvenienceStoreController {
 
     for (const result of promotionResultsForOrder) {
       if (result.isStockShortage) {
-        const userWantsToProceed = await this.inputView.askForFullPricePayment(
+        const userWantsToProceed = await this.validateYN(
+          this.inputView.askForFullPricePayment,
           result.name,
           result.remainder
         );
@@ -44,11 +45,11 @@ class ConvenienceStoreController {
       }
 
       if (result.isAdditionalPurchasePossible) {
-        const userWantsToAddPromotion =
-          await this.inputView.askForPromotionAddition(
-            result.name,
-            result.isAdditionalPurchasePossible
-          );
+        const userWantsToAddPromotion = await this.validateYN(
+          this.inputView.askForPromotionAddition,
+          result.name,
+          result.isAdditionalPurchasePossible
+        );
         if (userWantsToAddPromotion) {
           order.increaseProductQuantity(
             result.name,
@@ -60,7 +61,11 @@ class ConvenienceStoreController {
     }
 
     let membershipDiscountAmount = 0;
-    if (await this.inputView.askForMembershipDiscount()) {
+    const userWantsMembershipDiscount = await this.validateYN(
+      this.inputView.askForMembershipDiscount
+    );
+
+    if (userWantsMembershipDiscount) {
       const nonPromotedProducts = this.getNonPromotedProducts(
         order,
         promotionResultsForOrder
@@ -93,7 +98,11 @@ class ConvenienceStoreController {
 
     this.productStorage.updateStockForOrder(order);
 
-    if (await this.inputView.askForAdditionalPurchase()) {
+    const userWantsToAddMoreItems = await this.validateYN(
+      this.inputView.askForAdditionalPurchase
+    );
+
+    if (userWantsToAddMoreItems) {
       await this.run();
     }
   }
@@ -110,6 +119,16 @@ class ConvenienceStoreController {
     } catch (error) {
       printOutput(error.message);
       return this.validateOrderStock(productStorage, readPurchaseInput);
+    }
+  }
+
+  async validateYN(inputViewFunction, ...args) {
+    try {
+      const answer = await inputViewFunction(...args);
+      return answer;
+    } catch (error) {
+      printOutput(error.message);
+      return this.validateYN(inputViewFunction, ...args);
     }
   }
 
