@@ -13,8 +13,28 @@ class ProductStorage {
     const filePath = path.join(process.cwd(), 'public/products.md');
     const products = parseDataFromFile(filePath);
 
+    let productName = null;
+
     products.map(product => {
-      this.#productStorage.push(new Product(product));
+      if (product.name === productName) {
+        this.#productStorage[this.#productStorage.length - 1].increaseQuantity(
+          Number(product.quantity)
+        );
+      } else {
+        this.#productStorage.push(new Product(product));
+        if (product.promotion !== 'null') {
+          this.#productStorage.push(
+            new Product({
+              name: product.name,
+              price: product.price,
+              quantity: 0,
+              promotion: null,
+            })
+          );
+
+          productName = product.name;
+        }
+      }
     });
   }
 
