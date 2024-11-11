@@ -41,6 +41,13 @@ class Promotion {
       remainder,
     };
   }
+
+  isPromotionActive(currentDate) {
+    const date = new Date(currentDate);
+    const start_date = new Date(this.#start_date);
+    const end_date = new Date(this.#end_date);
+    return date >= start_date && date <= end_date;
+  }
 }
 
 export default Promotion;
