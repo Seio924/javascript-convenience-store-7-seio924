@@ -34,6 +34,18 @@ class OutputView {
       );
     });
   }
+
+  printFreeGifts(freeGiftProducts) {
+    printOutput('===========증정=============');
+    printOutput('상품명\t\t수량');
+
+    freeGiftProducts.forEach(product => {
+      const name = product.getProduct().name;
+      const quantity = product.getProduct().quantity;
+
+      printOutput(`${name}\t\t${quantity}`);
+    });
+  }
 }
 
 export default OutputView;
