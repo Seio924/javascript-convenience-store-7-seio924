@@ -35,6 +35,12 @@ class Order {
     });
   }
 
+  addPrice(productStorage) {
+    this.#orderList.forEach(orderProduct => {
+      orderProduct.setPrice(productStorage.getProductPrice(orderProduct));
+    });
+  }
+
   decreaseProductQuantity(productName, quantityToSubtract) {
     const orderProduct = this.#orderList.find(
       product => product.getProduct().name === productName

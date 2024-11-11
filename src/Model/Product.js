@@ -19,6 +19,10 @@ class Product {
     this.#promotion = promotion;
   }
 
+  setPrice(price) {
+    this.#price = price;
+  }
+
   decreaseQuantity(amount) {
     this.#quantity -= amount;
   }
