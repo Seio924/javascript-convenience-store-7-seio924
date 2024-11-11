@@ -1,5 +1,6 @@
 import Membership from './Model/Membership.js';
 import Order from './Model/Order.js';
+import Product from './Model/Product.js';
 import ProductStorage from './Model/ProductStorage.js';
 import Promotions from './Model/Promotions.js';
 import { printOutput } from './utils.js';
@@ -61,16 +62,37 @@ class App {
       }
     }
 
-    let discountAmount = 0;
-    if (inputView.askForMembershipDiscount()) {
+    let membershipDiscountAmount = 0;
+    if (await inputView.askForMembershipDiscount()) {
       const nonPromotedProducts = this.getNonPromotedProducts(
         order,
         promotionResultsForOrder
       );
 
-      discountAmount =
+      membershipDiscountAmount =
         membership.applyDiscountToNonPromotedProducts(nonPromotedProducts);
     }
+
+    outputView.printOrderList(order.getOrder().orderList);
+
+    const freeGiftProducts = this.createFreeGiftProducts(
+      promotionResultsForOrder,
+      productStorage
+    );
+
+    outputView.printFreeGifts(freeGiftProducts);
+
+    const orderTotalAmount = order.calculateTotalAmount();
+    const orderTotalQuantity = order.calculateTotalQuantity();
+    const promotionDiscountAmount =
+      this.calculateFreeGiftTotalAmount(freeGiftProducts);
+
+    outputView.printSummary(
+      orderTotalAmount,
+      orderTotalQuantity,
+      promotionDiscountAmount,
+      membershipDiscountAmount
+    );
   }
 
   async validateOrderStock(productStorage, readPurchaseInput) {
@@ -102,6 +124,26 @@ class App {
       });
 
     return nonPromotedProducts;
+  }
+
+  createFreeGiftProducts(promotionResultsForOrder, productStorage) {
+    return promotionResultsForOrder.map(result => {
+      const price = productStorage.getProductPrice(result.name);
+
+      return new Product({
+        name: result.name,
+        price: price,
+        quantity: result.fullSets,
+        promotion: null,
+      });
+    });
+  }
+
+  calculateFreeGiftTotalAmount(freeGiftProducts) {
+    return freeGiftProducts.reduce((total, freeGift) => {
+      const productInfo = freeGift.getProduct();
+      return total + productInfo.price * productInfo.quantity;
+    }, 0);
   }
 }
 
