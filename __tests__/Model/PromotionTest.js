@@ -70,4 +70,47 @@ describe('Promotion 테스트', () => {
       expect(promotion.calculateFreeGift(quantity)).toEqual(expectedOutput);
     }
   );
+
+  test.each([
+    [
+      '2024-01-01',
+      {
+        name: '탄산2+1',
+        buy: 2,
+        get: 1,
+        start_date: '2024-01-01',
+        end_date: '2024-12-31',
+      },
+      true,
+    ],
+    [
+      '2024-10-01',
+      {
+        name: '탄산2+1',
+        buy: 2,
+        get: 1,
+        start_date: '2024-11-01',
+        end_date: '2024-11-30',
+      },
+      false,
+    ],
+    [
+      '2024-12-31',
+      {
+        name: 'MD추천상품',
+        buy: 1,
+        get: 1,
+        start_date: '2024-01-01',
+        end_date: '2024-12-31',
+      },
+      true,
+    ],
+  ])(
+    '오늘 날짜가 프로모션 기간 내에 포함되는지 확인한다.',
+    (currentDate, promotionData, expectedOutput) => {
+      const promotion = new Promotion(promotionData);
+
+      expect(promotion.isPromotionActive(currentDate)).toBe(expectedOutput);
+    }
+  );
 });
