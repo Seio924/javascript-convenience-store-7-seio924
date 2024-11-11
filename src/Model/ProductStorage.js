@@ -47,15 +47,12 @@ class ProductStorage {
     return true;
   }
 
-  getProductPrice(orderProduct) {
-    const product = this.#productStorage.filter(
-      p => p.getProduct().name === orderProduct.getProduct().name
+  getProductPrice(productName) {
+    const product = this.#productStorage.find(
+      p => p.getProduct().name === productName
     );
 
-    let totalStock = 0;
-    product.map(p => (totalStock += p.getProduct().quantity));
-
-    return totalStock;
+    return product.getProduct().price;
   }
 
   getProductPromotion(productName) {
