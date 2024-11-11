@@ -50,4 +50,18 @@ describe('Membership 테스트', () => {
       expect(discountAmount).toBe(expectedDiscountAmount);
     }
   );
+
+  test.each([
+    [6000, 6000],
+    [10000, 8000],
+    [8000, 8000],
+  ])(
+    '멤버십 할인의 최대 한도는 8,000원이다.',
+    (discountAmount, expectedDiscount) => {
+      const membership = new Membership(30);
+      const limitedDiscount = membership.limitDiscountAmount(discountAmount);
+
+      expect(limitedDiscount).toBe(expectedDiscount);
+    }
+  );
 });
