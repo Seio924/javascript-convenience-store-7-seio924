@@ -69,7 +69,7 @@ class OutputView {
     );
     printOutput(`행사할인\t\t-${promotionDiscountAmount.toLocaleString()}`);
     printOutput(`멤버십할인\t\t-${membershipDiscountAmount.toLocaleString()}`);
-    printOutput(`내실돈\t\t${finalAmount.toLocaleString()}`);
+    printOutput(`내실돈\t\t\t${finalAmount.toLocaleString()}`);
   }
 }
 
