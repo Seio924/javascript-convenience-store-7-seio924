@@ -57,8 +57,8 @@ describe('OutputView 테스트', () => {
     const expectedOutputs = [
       '===========W 편의점=============',
       '상품명\t\t수량\t금액',
-      '콜라\t\t3\t3,000원',
-      '사이다\t\t2\t3,000원',
+      '콜라\t\t3\t3,000',
+      '사이다\t\t2\t3,000',
     ];
     const orderList = [
       new Product({ name: '콜라', price: 1000, quantity: 3, promotion: null }),

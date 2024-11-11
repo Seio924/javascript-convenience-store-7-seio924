@@ -30,7 +30,7 @@ class OutputView {
       const formattedTotalPrice = totalPrice.toLocaleString();
 
       printOutput(
-        `${productInfo.name}\t\t${productInfo.quantity}\t${formattedTotalPrice}원`
+        `${productInfo.name}\t\t${productInfo.quantity}\t${formattedTotalPrice}`
       );
     });
   }
