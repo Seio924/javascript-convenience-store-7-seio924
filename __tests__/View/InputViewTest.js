@@ -40,7 +40,7 @@ describe('InputView 테스트', () => {
       '[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.',
     ],
   ])(
-    '구매할 상품과 수량 형식이 올바르지 않은 경우 에러를 던진다.',
+    '구매할 상품과 수량 형식이 올바르지 않은 경우 예외를 발생시킨다.',
     async (invalidInput, expectedError) => {
       mockQuestions(invalidInput);
 
@@ -53,7 +53,7 @@ describe('InputView 테스트', () => {
   );
 
   test.each([[[''], '[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.']])(
-    '기타 잘못된 입력의 경우 에러를 던진다.',
+    '기타 잘못된 입력의 경우 예외를 발생시킨다.',
     async (invalidInput, expectedError) => {
       mockQuestions(invalidInput);
 
@@ -133,4 +133,35 @@ describe('InputView 테스트', () => {
 
     expect(wantsForAdditionalPurchase).toEqual(expectedOutput);
   });
+
+  test.each([
+    [
+      ['A', 'A', 'A', 'A'],
+      '[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.',
+    ],
+    [
+      ['X', '3', ';', '/'],
+      '[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.',
+    ],
+  ])(
+    '입력이 Y나 N이 아닌 경우 예외를 발생시킨다.',
+    async (invalidInput, expectedError) => {
+      mockQuestions(invalidInput);
+
+      const inputView = new InputView();
+
+      await expect(
+        inputView.askForPromotionAddition('콜라', 3)
+      ).rejects.toThrowError(expectedError);
+      await expect(
+        inputView.askForFullPricePayment('콜라', 3)
+      ).rejects.toThrowError(expectedError);
+      await expect(inputView.askForMembershipDiscount()).rejects.toThrowError(
+        expectedError
+      );
+      await expect(inputView.askForAdditionalPurchase()).rejects.toThrowError(
+        expectedError
+      );
+    }
+  );
 });
