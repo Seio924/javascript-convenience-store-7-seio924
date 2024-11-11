@@ -7,7 +7,7 @@ class Membership {
 
   applyDiscountToNonPromotedProducts(nonPromotedProducts) {
     const totalPrice = nonPromotedProducts.reduce((sum, product) => {
-      return sum + product.getProduct().price;
+      return sum + product.getProduct().price * product.getProduct().quantity;
     }, 0);
 
     const discountAmount = totalPrice * this.#discountRate;
