@@ -11,11 +11,18 @@ class OutputView {
       const productInfo = product.getProduct();
       let output = `- ${
         productInfo.name
-      } ${productInfo.price.toLocaleString()}원 ${productInfo.quantity}개`;
+      } ${productInfo.price.toLocaleString()}원 `;
+
+      if (productInfo.quantity === 0) {
+        output += '재고 없음';
+      } else {
+        output += `${productInfo.quantity}개`;
+      }
 
       if (productInfo.promotion) {
         output += ` ${productInfo.promotion}`;
       }
+
       printOutput(output);
     });
   }
