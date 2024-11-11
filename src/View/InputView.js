@@ -5,6 +5,11 @@ class InputView {
     const purchaseInput = await readInput(
       '구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])\n'
     );
+
+    if (!purchaseInput.trim()) {
+      throw new Error('[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.');
+    }
+
     let purchasedItems = [];
     const purchases = purchaseInput.split(',').map(name => name.trim());
 
