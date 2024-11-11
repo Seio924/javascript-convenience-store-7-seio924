@@ -8,10 +8,20 @@ class InputView {
     let purchasedItems = [];
     const purchases = purchaseInput.split(',').map(name => name.trim());
 
-    purchases.map(purchase => {
-      const [name, quantity] = purchase.match(/\[(.*?)\]/)[1].split('-');
-      purchasedItems.push({ name: name, quantity: Number(quantity) });
-    });
+    for (let purchase of purchases) {
+      const match = purchase.match(/\[(.*?)\-(\d+)\]/);
+
+      if (!match) {
+        throw new Error(
+          '[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.'
+        );
+      }
+
+      const name = match[1];
+      const quantity = Number(match[2]);
+
+      purchasedItems.push({ name: name, quantity: quantity });
+    }
 
     return purchasedItems;
   }
