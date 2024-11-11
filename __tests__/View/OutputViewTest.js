@@ -54,12 +54,6 @@ describe('OutputView 테스트', () => {
 
   test('구매 상품 내역을 출력한다.', () => {
     const logSpy = getLogSpy();
-    const expectedOutputs = [
-      '===========W 편의점=============',
-      '상품명\t\t수량\t금액',
-      '콜라\t\t3\t3,000',
-      '사이다\t\t2\t3,000',
-    ];
     const orderList = [
       new Product({ name: '콜라', price: 1000, quantity: 3, promotion: null }),
       new Product({
@@ -68,6 +62,12 @@ describe('OutputView 테스트', () => {
         quantity: 2,
         promotion: null,
       }),
+    ];
+    const expectedOutputs = [
+      '===========W 편의점=============',
+      '상품명\t\t수량\t금액',
+      '콜라\t\t3\t3,000',
+      '사이다\t\t2\t3,000',
     ];
 
     const outputView = new OutputView();
@@ -80,12 +80,6 @@ describe('OutputView 테스트', () => {
 
   test('증정 상품 내역을 출력한다.', () => {
     const logSpy = getLogSpy();
-    const expectedOutputs = [
-      '===========증정=============',
-      '상품명\t\t수량',
-      '콜라\t\t3',
-      '사이다\t\t2',
-    ];
     const freeGiftProducts = [
       new Product({
         name: '콜라',
@@ -100,9 +94,42 @@ describe('OutputView 테스트', () => {
         promotion: null,
       }),
     ];
+    const expectedOutputs = [
+      '===========증정=============',
+      '상품명\t\t수량',
+      '콜라\t\t3',
+      '사이다\t\t2',
+    ];
 
     const outputView = new OutputView();
     outputView.printFreeGifts(freeGiftProducts);
+
+    const output = getOutput(logSpy);
+
+    expectLogContains(output, expectedOutputs);
+  });
+
+  test('금액 정보를 출력한다.', () => {
+    const logSpy = getLogSpy();
+    const orderTotalAmount = 13000;
+    const orderTotalQuantity = 8;
+    const promotionDiscountAmount = 1000;
+    const membershipDiscountAmount = 3000;
+    const expectedOutputs = [
+      '==============================',
+      '총구매액\t8\t13,000',
+      '행사할인\t\t-1,000',
+      '멤버십할인\t\t-3,000',
+      '내실돈\t\t9,000',
+    ];
+
+    const outputView = new OutputView();
+    outputView.printSummary(
+      orderTotalAmount,
+      orderTotalQuantity,
+      promotionDiscountAmount,
+      membershipDiscountAmount
+    );
 
     const output = getOutput(logSpy);
 
