@@ -31,6 +31,28 @@ describe('InputView 테스트', () => {
   );
 
   test.each([
+    [
+      ['[초코바.4]', '[물-10]'],
+      '[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.',
+    ],
+    [
+      ['[사이다-5], [오렌지주스]', '[감자칩 1]'],
+      '[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.',
+    ],
+  ])(
+    '잘못된 형식의 입력이 들어올 경우 에러를 던진다.',
+    async (invalidInput, expectedError) => {
+      mockQuestions(invalidInput);
+
+      const inputView = new InputView();
+
+      await expect(inputView.readPurchaseInput()).rejects.toThrowError(
+        expectedError
+      );
+    }
+  );
+
+  test.each([
     [['Y'], '사이다', 1, true],
     [['N'], '콜라', 2, false],
     [['Y'], '오렌지주스', 3, true],
