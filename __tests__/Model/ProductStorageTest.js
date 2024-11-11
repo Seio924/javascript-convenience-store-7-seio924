@@ -1,6 +1,7 @@
 import Order from '../../src/Model/Order';
 import Product from '../../src/Model/Product';
 import ProductStorage from '../../src/Model/ProductStorage';
+import Promotions from '../../src/Model/Promotions';
 
 describe('ProductStorage 테스트', () => {
   test('물품 저장소에 물품 목록에 맞게 재고를 채워넣는다.', async () => {
@@ -152,6 +153,67 @@ describe('ProductStorage 테스트', () => {
       const promotion = productStorage.getProductPromotion(productName);
 
       expect(promotion).toBe(expectedOutput);
+    }
+  );
+
+  test.each([
+    ['콜라', '탄산2+1', [{ name: '콜라', quantity: 5 }], 5, 10],
+    ['콜라', '탄산2+1', [{ name: '콜라', quantity: 12 }], 0, 8],
+  ])(
+    '고객이 상품을 구매할 때마다, 결제된 수량만큼 해당 상품의 재고에서 차감하여 수량을 관리한다. (프로모션 O)',
+    (
+      name,
+      promotionName,
+      orderList,
+      expectedPromotionQuantity,
+      expectedNonPromotionQuantity
+    ) => {
+      const order = new Order();
+      order.setOrderList(orderList);
+
+      const productStorage = new ProductStorage();
+      productStorage.fillProductStorage();
+
+      const promotions = new Promotions();
+      promotions.setPromotions();
+
+      order.addPromotionToOrder(productStorage, promotions.getPromotions());
+
+      productStorage.updateStockForOrder(order);
+
+      const updatedPromotionQuantity =
+        productStorage.getProductQuantityByPromotion(name, promotionName);
+      const updatedNonPromotionQuantity =
+        productStorage.getProductQuantityByPromotion(name, null);
+
+      expect(updatedPromotionQuantity).toBe(expectedPromotionQuantity);
+      expect(updatedNonPromotionQuantity).toBe(expectedNonPromotionQuantity);
+    }
+  );
+
+  test.each([
+    ['에너지바', [{ name: '에너지바', quantity: 5 }], 0],
+    ['정식도시락', [{ name: '정식도시락', quantity: 2 }], 6],
+  ])(
+    '고객이 상품을 구매할 때마다, 결제된 수량만큼 해당 상품의 재고에서 차감하여 수량을 관리한다. (프로모션 X)',
+    (name, orderList, expectedNonPromotionQuantity) => {
+      const order = new Order();
+      order.setOrderList(orderList);
+
+      const productStorage = new ProductStorage();
+      productStorage.fillProductStorage();
+
+      const promotions = new Promotions();
+      promotions.setPromotions();
+
+      order.addPromotionToOrder(productStorage, promotions.getPromotions());
+
+      productStorage.updateStockForOrder(order);
+
+      const updatedNonPromotionQuantity =
+        productStorage.getProductQuantityByPromotion(name, null);
+
+      expect(updatedNonPromotionQuantity).toBe(expectedNonPromotionQuantity);
     }
   );
 });
