@@ -23,14 +23,22 @@ class Order {
     });
   }
 
-  addPromotionToOrder(productStorage) {
+  addPromotionToOrder(productStorage, promotions) {
+    const orderDate = this.#orderDate;
+
     this.#orderList.forEach(orderProduct => {
-      const promotion = productStorage.getProductPromotion(
+      const productPromotion = productStorage.getProductPromotion(
         orderProduct.getProduct().name
       );
 
+      const promotion = promotions.find(
+        promo => promo.getPromotion().name === productPromotion
+      );
+
       if (promotion) {
-        orderProduct.setPromotion(promotion);
+        if (promotion.isPromotionActive(orderDate)) {
+          orderProduct.setPromotion(promotion.getPromotion().name);
+        }
       }
     });
   }

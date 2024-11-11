@@ -30,7 +30,6 @@ class Promotions {
     const freeGifts = [];
 
     order.getOrder().orderList.forEach(orderProduct => {
-      const orderDate = order.getOrder().orderDate;
       const productName = orderProduct.getProduct().name;
       const productPromotion = orderProduct.getProduct().promotion;
       const purchaseQuantity = orderProduct.getProduct().quantity;
@@ -40,32 +39,30 @@ class Promotions {
           promo => promo.getPromotion().name === productPromotion
         );
 
-        if (promotion.isPromotionActive(orderDate)) {
-          const promotionProductQuantity =
-            productStorage.getProductQuantityByPromotion(
-              productName,
-              productPromotion
-            );
-
-          const {
-            isStockShortage,
-            isAdditionalPurchasePossible,
-            fullSets,
-            remainder,
-          } = this.calculateFreeGiftBasedOnStock(
-            purchaseQuantity,
-            promotionProductQuantity,
-            promotion
+        const promotionProductQuantity =
+          productStorage.getProductQuantityByPromotion(
+            productName,
+            productPromotion
           );
 
-          freeGifts.push({
-            name: productName,
-            isStockShortage,
-            isAdditionalPurchasePossible,
-            fullSets,
-            remainder,
-          });
-        }
+        const {
+          isStockShortage,
+          isAdditionalPurchasePossible,
+          fullSets,
+          remainder,
+        } = this.calculateFreeGiftBasedOnStock(
+          purchaseQuantity,
+          promotionProductQuantity,
+          promotion
+        );
+
+        freeGifts.push({
+          name: productName,
+          isStockShortage,
+          isAdditionalPurchasePossible,
+          fullSets,
+          remainder,
+        });
       }
     });
 

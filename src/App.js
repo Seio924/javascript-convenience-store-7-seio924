@@ -28,7 +28,7 @@ class App {
       inputView.readPurchaseInput
     );
     order.addPrice(productStorage);
-    order.addPromotionToOrder(productStorage);
+    order.addPromotionToOrder(productStorage, promotions.getPromotions());
 
     const promotionResultsForOrder = promotions.checkPromotionInOrder(
       productStorage,

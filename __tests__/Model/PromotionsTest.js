@@ -1,5 +1,4 @@
 import Order from '../../src/Model/Order';
-import Product from '../../src/Model/Product';
 import ProductStorage from '../../src/Model/ProductStorage';
 import Promotion from '../../src/Model/Promotion';
 import Promotions from '../../src/Model/Promotions';
@@ -101,12 +100,12 @@ describe('Promotions 테스트', () => {
       const productStorage = new ProductStorage();
       productStorage.fillProductStorage();
 
-      const order = new Order();
-      order.setOrderList(purchasedItem);
-      order.addPromotionToOrder(productStorage);
-
       const promotions = new Promotions();
       promotions.setPromotions();
+
+      const order = new Order();
+      order.setOrderList(purchasedItem);
+      order.addPromotionToOrder(productStorage, promotions.getPromotions());
 
       expect(promotions.checkPromotionInOrder(productStorage, order)).toEqual(
         expectedOutput
