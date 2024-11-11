@@ -1,3 +1,4 @@
+import Membership from './Model/Membership.js';
 import Order from './Model/Order.js';
 import ProductStorage from './Model/ProductStorage.js';
 import Promotions from './Model/Promotions.js';
@@ -9,6 +10,7 @@ class App {
   async run() {
     const productStorage = new ProductStorage();
     const promotions = new Promotions();
+    const membership = new Membership(30);
 
     const inputView = new InputView();
     const outputView = new OutputView();
@@ -17,7 +19,6 @@ class App {
     promotions.setPromotions();
 
     const products = productStorage.getProductStorage();
-    const promotionList = promotions.getPromotions();
 
     outputView.printProducts(products);
 
@@ -25,6 +26,7 @@ class App {
       productStorage,
       inputView.readPurchaseInput
     );
+    order.addPrice(productStorage);
     order.addPromotionToOrder(productStorage);
 
     const promotionResultsForOrder = promotions.checkPromotionInOrder(
