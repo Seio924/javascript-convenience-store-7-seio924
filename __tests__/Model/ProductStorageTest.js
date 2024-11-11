@@ -89,13 +89,16 @@ describe('ProductStorage 테스트', () => {
   });
 
   test.each([
-    [{ name: '콜라', quantity: 5 }, true],
-    [{ name: '사이다', quantity: 10 }, true],
-    [{ name: '콜라', quantity: 15 }, true],
-    [{ name: '에너지바', quantity: 6 }, false],
+    [{ name: '콜라', quantity: 5 }, undefined],
+    [{ name: '사이다', quantity: 10 }, undefined],
+    [{ name: '콜라', quantity: 15 }, undefined],
+    [
+      { name: '에너지바', quantity: 6 },
+      '[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.',
+    ],
   ])(
-    '구매 수량과 각 상품의 재고 수량을 고려하여 재료 부족 여부를 확인한다.',
-    async (purchasedItem, expectedOutput) => {
+    '구매 수량과 각 상품의 재고 수량을 고려하여 재고가 부족하면 예외를 발생시킨다.',
+    async (purchasedItem, expectedError) => {
       const order = new Order();
       const productStorage = new ProductStorage();
 
@@ -105,9 +108,46 @@ describe('ProductStorage 테스트', () => {
       const orderList = order.getOrder().orderList;
       const orderProduct = orderList[0];
 
-      const result = productStorage.checkStockAvailability(orderProduct);
+      if (expectedError) {
+        expect(() => {
+          productStorage.checkStockAvailability(orderProduct);
+        }).toThrowError(new Error(expectedError));
+      } else {
+        expect(() => {
+          productStorage.checkStockAvailability(orderProduct);
+        }).not.toThrowError();
+      }
+    }
+  );
 
-      expect(result).toBe(expectedOutput);
+  test.each([
+    [{ name: '콜라', quantity: 5 }, undefined],
+    [{ name: '사이다', quantity: 7 }, undefined],
+    [
+      { name: '존재하지 않는 상품', quantity: 1 },
+      '[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.',
+    ],
+  ])(
+    '상품이 존재하지 않는 경우 예외를 발생시킨다.',
+    (purchasedItem, expectedError) => {
+      const order = new Order();
+      const productStorage = new ProductStorage();
+
+      productStorage.fillProductStorage();
+      order.setOrderList([purchasedItem]);
+
+      const orderList = order.getOrder().orderList;
+      const orderProduct = orderList[0];
+
+      if (expectedError) {
+        expect(() => {
+          productStorage.checkProductExists(orderProduct);
+        }).toThrowError(new Error(expectedError));
+      } else {
+        expect(() => {
+          productStorage.checkProductExists(orderProduct);
+        }).not.toThrowError();
+      }
     }
   );
 
