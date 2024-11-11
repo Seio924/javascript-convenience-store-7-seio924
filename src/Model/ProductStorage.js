@@ -47,6 +47,66 @@ class ProductStorage {
     return true;
   }
 
+  updateStockForOrder(order) {
+    const orderList = order.getOrder().orderList;
+
+    orderList.forEach(orderProduct => {
+      const productName = orderProduct.getProduct().name;
+      const productPromotion = orderProduct.getProduct().promotion;
+      let orderQuantity = orderProduct.getProduct().quantity;
+      let remain = false;
+
+      if (productPromotion) {
+        remain = this.updateStockForProductWithPromotion(
+          productName,
+          productPromotion,
+          orderQuantity
+        );
+        orderQuantity = remain;
+      }
+
+      if (!productPromotion || remain) {
+        this.updateStockForProductWithoutPromotion(productName, orderQuantity);
+      }
+    });
+  }
+
+  updateStockForProductWithPromotion(
+    productName,
+    productPromotion,
+    orderQuantity
+  ) {
+    for (let product of this.#productStorage) {
+      if (
+        product.getProduct().name === productName &&
+        product.getProduct().promotion === productPromotion
+      ) {
+        const productQuantity = product.getProduct().quantity;
+
+        if (orderQuantity > productQuantity) {
+          product.decreaseQuantity(productQuantity);
+          orderQuantity -= productQuantity;
+          return orderQuantity;
+        } else {
+          product.decreaseQuantity(orderQuantity);
+          return false;
+        }
+      }
+    }
+  }
+
+  updateStockForProductWithoutPromotion(productName, orderQuantity) {
+    const product = this.#productStorage.find(
+      product =>
+        product.getProduct().name === productName &&
+        product.getProduct().promotion === null
+    );
+
+    if (product) {
+      product.decreaseQuantity(orderQuantity);
+    }
+  }
+
   getProductPrice(productName) {
     const product = this.#productStorage.find(
       p => p.getProduct().name === productName

@@ -30,11 +30,6 @@ class App {
     order.addPrice(productStorage);
     order.addPromotionToOrder(productStorage, promotions.getPromotions());
 
-    const promotionResultsForOrder = promotions.checkPromotionInOrder(
-      productStorage,
-      order
-    );
-
     for (const result of promotionResultsForOrder) {
       if (result.isStockShortage) {
         const userWantsToProceed = await inputView.askForFullPricePayment(
@@ -92,6 +87,12 @@ class App {
       orderTotalQuantity,
       promotionDiscountAmount,
       membershipDiscountAmount
+    );
+
+    productStorage.updateStockForOrder(order);
+    const promotionResultsForOrder = promotions.checkPromotionInOrder(
+      productStorage,
+      order
     );
   }
 
