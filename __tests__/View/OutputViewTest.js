@@ -120,7 +120,7 @@ describe('OutputView 테스트', () => {
       '총구매액\t8\t13,000',
       '행사할인\t\t-1,000',
       '멤버십할인\t\t-3,000',
-      '내실돈\t\t9,000',
+      '내실돈\t\t\t9,000',
     ];
 
     const outputView = new OutputView();

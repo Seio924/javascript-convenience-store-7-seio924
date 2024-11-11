@@ -103,7 +103,7 @@ describe('편의점', () => {
     jest.restoreAllMocks();
   });
 
-  test.skip('파일에 있는 상품 목록 출력', async () => {
+  test('파일에 있는 상품 목록 출력', async () => {
     await run({
       inputs: ['[콜라-1]', 'N', 'N'],
       /* prettier-ignore */
@@ -130,14 +130,14 @@ describe('편의점', () => {
     });
   });
 
-  test.skip('여러 개의 일반 상품 구매', async () => {
+  test('여러 개의 일반 상품 구매', async () => {
     await run({
       inputs: ['[비타민워터-3],[물-2],[정식도시락-2]', 'N', 'N'],
       expectedIgnoringWhiteSpaces: ['내실돈18,300'],
     });
   });
 
-  test.skip('기간에 해당하지 않는 프로모션 적용', async () => {
+  test('기간에 해당하지 않는 프로모션 적용', async () => {
     mockNowDate('2024-02-01');
 
     await run({
@@ -146,12 +146,21 @@ describe('편의점', () => {
     });
   });
 
-  test('예외 테스트', async () => {
+  test('예외 테스트: 재고 수량 초과', async () => {
     await runExceptions({
       inputs: ['[컵라면-12]', 'N', 'N'],
       inputsToTerminate: INPUTS_TO_TERMINATE,
       expectedErrorMessage:
         '[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.',
+    });
+  });
+
+  test('예외 테스트: 존재하지 않는 상품', async () => {
+    await runExceptions({
+      inputs: ['[안녕-12]', 'N', 'N'],
+      inputsToTerminate: INPUTS_TO_TERMINATE,
+      expectedErrorMessage:
+        '[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.',
     });
   });
 });
