@@ -40,6 +40,8 @@ class InputView {
       return true;
     } else if (wantsToAddPromotionItem === 'N') {
       return false;
+    } else {
+      throw new Error('[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.');
     }
   }
 
@@ -52,6 +54,8 @@ class InputView {
       return true;
     } else if (wantsFullPricePayment === 'N') {
       return false;
+    } else {
+      throw new Error('[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.');
     }
   }
 
@@ -64,6 +68,8 @@ class InputView {
       return true;
     } else if (wantsMembershipDiscount === 'N') {
       return false;
+    } else {
+      throw new Error('[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.');
     }
   }
 
@@ -76,6 +82,8 @@ class InputView {
       return true;
     } else if (wantsForAdditionalPurchase === 'N') {
       return false;
+    } else {
+      throw new Error('[ERROR] 잘못된 입력입니다. Y 또는 N을 입력해 주세요.');
     }
   }
 }
