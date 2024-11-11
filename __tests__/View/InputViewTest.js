@@ -69,4 +69,22 @@ describe('InputView 테스트', () => {
       expect(wantsFullPricePayment).toEqual(expectedOutput);
     }
   );
+
+  test.each([
+    [['Y'], true],
+    [['N'], false],
+    [['Y'], true],
+    [['N'], false],
+  ])(
+    '멤버십 할인 적용 여부를 입력 받는다.',
+    async (purchaseInput, expectedOutput) => {
+      mockQuestions(purchaseInput);
+
+      const inputView = new InputView();
+      const wantsMembershipDiscount =
+        await inputView.askForMembershipDiscount();
+
+      expect(wantsMembershipDiscount).toEqual(expectedOutput);
+    }
+  );
 });
