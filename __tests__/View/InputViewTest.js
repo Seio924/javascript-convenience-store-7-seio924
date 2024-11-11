@@ -75,16 +75,27 @@ describe('InputView 테스트', () => {
     [['N'], false],
     [['Y'], true],
     [['N'], false],
-  ])(
-    '멤버십 할인 적용 여부를 입력 받는다.',
-    async (purchaseInput, expectedOutput) => {
-      mockQuestions(purchaseInput);
+  ])('멤버십 할인 적용 여부를 입력 받는다.', async (input, expectedOutput) => {
+    mockQuestions(input);
 
-      const inputView = new InputView();
-      const wantsMembershipDiscount =
-        await inputView.askForMembershipDiscount();
+    const inputView = new InputView();
+    const wantsMembershipDiscount = await inputView.askForMembershipDiscount();
 
-      expect(wantsMembershipDiscount).toEqual(expectedOutput);
-    }
-  );
+    expect(wantsMembershipDiscount).toEqual(expectedOutput);
+  });
+
+  test.each([
+    [['Y'], true],
+    [['N'], false],
+    [['Y'], true],
+    [['N'], false],
+  ])('추가 구매 여부를 입력 받는다.', async (input, expectedOutput) => {
+    mockQuestions(input);
+
+    const inputView = new InputView();
+    const wantsForAdditionalPurchase =
+      await inputView.askForAdditionalPurchase();
+
+    expect(wantsForAdditionalPurchase).toEqual(expectedOutput);
+  });
 });
