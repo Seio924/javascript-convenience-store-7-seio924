@@ -44,11 +44,8 @@ class ProductStorage {
 
   checkOrderStock(order) {
     for (const orderProduct of order.getOrder().orderList) {
-      if (!this.checkStockAvailability(orderProduct)) {
-        throw new Error(
-          '[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.'
-        );
-      }
+      this.checkProductExists(orderProduct);
+      this.checkStockAvailability(orderProduct);
     }
   }
 
@@ -61,10 +58,20 @@ class ProductStorage {
     product.map(p => (totalStock += p.getProduct().quantity));
 
     if (orderProduct.getProduct().quantity > totalStock) {
-      return false;
+      throw new Error(
+        '[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.'
+      );
     }
+  }
 
-    return true;
+  checkProductExists(orderProduct) {
+    const product = this.#productStorage.find(
+      product => product.getProduct().name === orderProduct.getProduct().name
+    );
+
+    if (!product) {
+      throw new Error('[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.');
+    }
   }
 
   updateStockForOrder(order) {
