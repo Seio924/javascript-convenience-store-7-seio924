@@ -39,6 +39,18 @@ class InputView {
       return false;
     }
   }
+
+  async askForMembershipDiscount() {
+    const wantsMembershipDiscount = await readInput(
+      '멤버십 할인을 받으시겠습니까? (Y/N)'
+    );
+
+    if (wantsMembershipDiscount === 'Y') {
+      return true;
+    } else if (wantsMembershipDiscount === 'N') {
+      return false;
+    }
+  }
 }
 
 export default InputView;
