@@ -19,6 +19,21 @@ class OutputView {
       printOutput(output);
     });
   }
+
+  printOrderList(orderList) {
+    printOutput('===========W 편의점=============');
+    printOutput('상품명\t\t수량\t금액');
+
+    orderList.forEach(orderProduct => {
+      const productInfo = orderProduct.getProduct();
+      const totalPrice = productInfo.price * productInfo.quantity;
+      const formattedTotalPrice = totalPrice.toLocaleString();
+
+      printOutput(
+        `${productInfo.name}\t\t${productInfo.quantity}\t${formattedTotalPrice}원`
+      );
+    });
+  }
 }
 
 export default OutputView;
