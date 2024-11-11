@@ -12,6 +12,15 @@ class Membership {
 
     const discountAmount = totalPrice * this.#discountRate;
 
+    return this.limitDiscountAmount(discountAmount);
+  }
+
+  limitDiscountAmount(discountAmount) {
+    const maxDiscount = 8000;
+    if (discountAmount > maxDiscount) {
+      return maxDiscount;
+    }
+
     return discountAmount;
   }
 }
